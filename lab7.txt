@@ -1,0 +1,86 @@
+1.
+MariaDB [baza_danych]> SELECT * FROM etaty ORDER BY stanowisko ASC;
+
+2.
+MariaDB [baza_danych]> SELECT DISTINCT stanowisko
+    -> FROM etaty
+    -> ORDER BY stanowisko ASC;
+
+3.
+MariaDB [baza_danych]> SELECT wojewodztwo
+    -> FROM wojewodztwa
+    -> ORDER BY wojewodztwo DESC
+    -> LIMIT 3;
+
+4.
+MariaDB [baza_danych]> SET @n := 0;
+MariaDB [baza_danych]> SELECT (@n:=@n + 1) AS numer, CONCAT(imie,' ', nazwisko) AS imie_nazwisko FROM osoby;
+
+5.
+MariaDB [baza_danych]> SET @n := 0;
+MariaDB [baza_danych]> SELECT (@n:=@n + 1) AS numer, stanowisko FROM etaty;
+
+6.
+MariaDB [baza_danych]> SELECT SUM(pensja) AS Suma
+    -> FROM etaty;
+
+7.
+MariaDB [baza_danych]> SELECT AVG(pensja) AS srednia
+    -> FROM etaty;
+
+8.
+MariaDB [baza_danych]> SELECT MIN(pensja) AS min
+    -> FROM etaty;
+9.
+MariaDB [baza_danych]> SELECT MAX(pensja) AS maks
+    -> FROM etaty;
+10.
+MariaDB [baza_danych]> SELECT f.nazwa_skr AS Nazwa_Firmy, SUM(e.pensja) AS Suma_Pensji
+    -> FROM etaty e
+    -> JOIN firmy f ON e.id_firmy = f.nazwa_skr
+    -> GROUP BY f.nazwa_skr;
+11.
+MariaDB [baza_danych]> SELECT f.nazwa_skr AS Nazwa_Firmy, AVG(e.pensja) AS Srednia_Pensji
+    -> FROM etaty e
+    -> JOIN firmy f ON e.id_firmy = f.nazwa_skr
+    -> GROUP BY f.nazwa_skr;
+12.
+MariaDB [baza_danych]> SELECT stanowisko, COUNT(*) AS Liczba_Osob
+    -> FROM etaty
+    -> GROUP BY stanowisko;
+13.
+MariaDB [baza_danych]> SELECT stanowisko, COUNT(*) AS Liczba_Osob
+    -> FROM etaty
+    -> GROUP BY stanowisko
+    -> HAVING COUNT(*) > 1;
+14.
+MariaDB [baza_danych]> SELECT DISTINCT nazwa
+    -> FROM miasta
+    -> WHERE id_miasta IN (SELECT id_miasta FROM osoby);
+15.
+MariaDB [baza_danych]> SELECT DISTINCT nazwa
+    -> FROM miasta
+    -> WHERE id_miasta IN (SELECT id_miasta FROM firmy);
+16.
+MariaDB [baza_danych]> SELECT wojewodztwo, COUNT(m.id_miasta) AS Liczba_Miast
+    -> FROM wojewodztwa w
+    -> JOIN miasta m ON w.kod_w = m.kod_w
+    -> GROUP BY w.wojewodztwo;
+17.
+MariaDB [baza_danych]> SELECT COUNT(*) AS Wojewodztwa_Bez_Miast
+    -> FROM wojewodztwa
+    -> WHERE kod_w NOT IN (SELECT DISTINCT kod_w FROM miasta);
+
+18.
+MariaDB [baza_danych]> SELECT f.nazwa AS Nazwa_Firmy, COUNT(e.id_etatu) AS Liczba_Stanowisk
+    -> FROM firmy f
+    -> JOIN etaty e ON f.nazwa_skr = e.id_firmy
+    -> GROUP BY f.nazwa;
+
+19.
+
+MariaDB [baza_danych]> SELECT f.nazwa AS Nazwa_Firmy, COUNT(e.id_etatu) AS Liczba_Stanowisk
+    -> FROM firmy f
+    -> JOIN etaty e ON f.nazwa_skr = e.id_firmy
+    -> GROUP BY f.nazwa
+    -> HAVING Liczba_Stanowisk > 1 AND Liczba_Stanowisk < 5;

@@ -1,0 +1,111 @@
+1. Dodaj nową miejscowość w tabeli miasta. Powinna nazywać się Gdynia i znajdować się w województwie pomorskim
+
+MariaDB [baza_danych]> INSERT INTO miasta (kod_w, nazwa) VALUES ('pom', 'gdynia')
+    -> ;
+
+2. Dodaj firmę Kogucik Sp z o.o. w Gdyni do tabeli firmy, adres podaj dowolny
+
+MariaDB [baza_danych]> INSERT INTO firmy (nazwa_skr, nazwa, id_miasta, kod_pocztowy, ulica)
+    -> VALUES ('KGT', 'KogucikSp z o. o.', 5, '81-123', 'Miodowa 4')
+    -> ;
+
+3. Dodaj 5 dowolnych osób do tabeli osoby, które mieszkają w Gdyni
+
+MariaDB [baza_danych]> INSERT INTO osoby (id_miasta, imie, nazwisko)
+    -> VALUES
+    -> (5, 'Dawid', 'Kaka'),
+    -> (5, 'Kamil', 'Mamon'),
+    -> (5, 'Mikro', 'Cypek'),
+    -> (5, 'Dawid', 'Jasper'),
+    -> (5, 'Marcin', 'Najman')
+    -> ;
+
+4. W tabeli etaty wpisz datę zatrudnienia tychże osób od dzisiejszego dnia, na stanowisku pracownik wsparcia w firmie Kogucik w Gdyni z pensją 3000 zł
+
+MariaDB [baza_danych]> INSERT INTO etaty (id_osoby, id_firmy, pensja, od, stanowisko)
+    -> VALUES
+    -> (6, 'KGT', 3000, CURDATE(), 'Pracownik wsparcia'),
+    -> (7, 'KGT', 3000, CURDATE(), 'Pracownik wsparcia'),
+    -> (8, 'KGT', 3000, CURDATE(), 'Pracownik wsparcia'),
+    -> (9, 'KGT', 3000, CURDATE(), 'Pracownik wsparcia'),
+    -> (10, 'KGT', 3000, CURDATE(), 'Pracownik wsparcia')
+    -> ;
+
+
+5. Tabelę osoby zmodyfikuj tak, aby pojawiło się dodatkowe pole: data_urodzenia.
+
+MariaDB [baza_danych]> ALTER TABLE osoby
+    -> ADD COLUMN data_urodzenia DATE
+    -> ;
+
+6. Nadaj wszystkim możliwym osobom w tabeli osoby wartość daty urodzenia jako 31.12.1999 roku
+
+MariaDB [baza_danych]> UPDATE osoby
+    -> SET data_urodzenia = '1999-12-31'
+    -> ;
+
+7. W tabeli firmy dodaj pola numer_budynku i numer_lokalu
+
+MariaDB [baza_danych]> ALTER TABLE firmy
+    -> ADD COLUMN numer_budynku VARCHAR(10),
+    -> ADD COLUMN numer_lokalu VARCHAR(10)
+    -> ;
+
+
+8.W tabeli osoby dodaj pole imie2, powinno znaleźć się przed nazwiskiem
+
+MariaDB [baza_danych]> ALTER TABLE osoby
+    -> ADD COLUMN imie2 VARCHAR(20) AFTER imie
+    -> ;
+
+9. Utwórz indeks na tabeli województwa (pole: wojewodztwo)
+
+MariaDB [baza_danych]> CREATE INDEX idx_wojewodztwo ON wojewodztwa (wojewodztwo);
+
+10. Utwórz indeks na tabeli miasta (pole: nazwa)
+
+MariaDB [baza_danych]> CREATE INDEX idx_miasto ON miasta (nazwa);
+
+11. Utwórz indeks na tabeli etaty (pole: stanowisko)
+
+MariaDB [baza_danych]> CREATE INDEX idx_osoba ON etaty (stanowisko);
+
+12. Utwórz indeks na tabeli osoby (pola: nazwisko i imie)
+
+MariaDB [baza_danych]> CREATE INDEX idx_nazwisko_imie ON osoby (nazwisko, imie);
+
+13. Wyświetl zawartość tabeli (tylko imię, imię2, nazwisko i data_urodzenia) osoby alfabetycznie wg nazwiska i imienia
+
+MariaDB [baza_danych]> SELECT imie, imie2, nazwisko, data_urodzenia
+    -> FROM osoby
+    -> ORDER BY nazwisko, imie
+    -> ;
+
+
+14. Wynik polecenia 13 poszerz o wyświetlenie kolumny stanowisko z tabeli etaty (Użyj koniecznie klauzuli WHERE, zamiast JOIN, pamiętaj o skojarzeniu kluczy)
+
+MariaDB [baza_danych]> SELECT o.imie, o.imie2, o.nazwisko, o.data_urodzenia, e.stanowisko
+    -> FROM osoby o, etaty e
+    -> WHERE o.id_osoby = e.id_osoby
+    -> ORDER BY o.nazwisko, o.imie
+    -> ;
+
+15. Korzystając z tabel firmy, miasta i wojewodztwa wyświetl nazwy wszystkich firm, miasta ich siedziby i wojewodztwa (Użyj koniecznie klauzuli WHERE, zamiast JOIN i pamiętaj o skojarzeniu kluczy)
+
+MariaDB [baza_danych]> SELECT f.nazwa, m.nazwa AS miasto, w.wojewodztwo
+    -> FROM firmy f, miasta m, wojewodztwa w
+    -> WHERE f.id_miasta = m.id_miasta AND m.kod_w = w.kod_w
+    -> ;
+
+
+
+
+
+
+
+
+
+
+
+
+

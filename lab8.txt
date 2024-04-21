@@ -1,0 +1,99 @@
+1.
+MariaDB [baza_danych]> SELECT miasta.nazwa, wojewodztwa.wojewodztwo
+    -> FROM miasta, wojewodztwa
+    -> WHERE miasta.kod_w = wojewodztwa.kod_w;
+
+2.
+MariaDB [baza_danych]> SELECT miasta.nazwa, wojewodztwa.wojewodztwo
+    -> FROM miasta
+    -> NATURAL JOIN wojewodztwa;
+
+3.
+SELECT miasta.nazwa, wojewodztwa.wojewodztwo
+    -> FROM miasta JOIN wojewodztwa;
+
+4.
+MariaDB [baza_danych]> SELECT miasta.nazwa, wojewodztwa.wojewodztwo
+    -> FROM miasta
+    -> JOIN wojewodztwa ON miasta.kod_w = wojewodztwa.kod_w;
+
+5.
+MariaDB [baza_danych]> SELECT miasta.nazwa, wojewodztwa.wojewodztwo
+    -> FROM miasta INNER JOIN wojewodztwa;
+
+6.
+MariaDB [baza_danych]> SELECT miasta.nazwa, wojewodztwa.wojewodztwo
+    -> FROM miasta
+    -> LEFT OUTER JOIN wojewodztwa ON miasta.kod_w = wojewodztwa.kod_w;
+7.
+MariaDB [baza_danych]> SELECT miasta.nazwa, wojewodztwa.wojewodztwo
+    -> FROM miasta
+    -> RIGHT OUTER JOIN wojewodztwa ON miasta.kod_w = wojewodztwa.kod_w;
+
+8.
+MariaDB [baza_danych]> SELECT o.imie, o.nazwisko, m.nazwa, w.wojewodztwo
+    -> FROM osoby o, miasta m, wojewodztwa w
+    -> WHERE o.id_miasta = m.id_miasta AND m.kod_w = w.kod_w;
+9.
+MariaDB [baza_danych]> SELECT o.imie, o.nazwisko, m.nazwa, w.wojewodztwo
+    -> FROM osoby o
+    -> NATURAL JOIN miasta m
+    -> NATURAL JOIN wojewodztwa w;
+
+10.
+MariaDB [baza_danych]> SELECT o.imie, o.nazwisko, m.nazwa, w.wojewodztwo
+    -> FROM osoby o
+    -> NATURAL JOIN miasta m
+    -> NATURAL JOIN wojewodztwa w;
+
+11.
+MariaDB [baza_danych]> SELECT o.imie, o.nazwisko, m.nazwa, w.wojewodztwo
+    -> FROM osoby o
+    -> INNER JOIN miasta m ON o.id_miasta = m.id_miasta
+    -> INNER JOIN wojewodztwa w ON w.kod_w = m.kod_w;
+
+12.
+MariaDB [baza_danych]> SELECT o.imie, o.nazwisko, m.nazwa, w.wojewodztwo
+    -> FROM osoby o
+    -> LEFT OUTER JOIN miasta m ON o.id_miasta = m.id_miasta
+    -> LEFT OUTER JOIN wojewodztwa w ON m.kod_w = w.kod_w;
+
+13.
+MariaDB [baza_danych]> SELECT o.imie, o.nazwisko, m.nazwa, w.wojewodztwo
+    -> FROM osoby o
+    -> RIGHT OUTER JOIN miasta m ON o.id_miasta = m.id_miasta
+    -> RIGHT OUTER JOIN wojewodztwa w ON m.kod_w = w.kod_w;
+14.
+MariaDB [baza_danych]> SELECT m.nazwa
+    -> FROM miasta m
+    -> JOIN osoby o ON o.id_miasta = m.id_miasta
+    -> UNION
+    -> SELECT m.nazwa
+    -> FROM miasta m
+    -> JOIN firmy f ON f.id_miasta = m.id_miasta;
+15.
+MariaDB [baza_danych]> SELECT m.nazwa
+    -> FROM miasta m
+    -> JOIN osoby o ON o.id_miasta = m.id_miasta
+    -> UNION ALL
+    -> SELECT m.nazwa
+    -> FROM miasta m
+    -> JOIN firmy f ON f.id_miasta = m.id_miasta;
+
+16.
+MariaDB [baza_danych]> SELECT m.nazwa, o.imie, o.nazwisko
+    -> FROM miasta m, osoby o
+    -> WHERE o.id_miasta = m.id_miasta
+    -> UNION
+    -> SELECT m.nazwa, f.nazwa, f.nazwa_skr
+    -> FROM miasta m, firmy f
+    -> WHERE m.id_miasta = f.id_miasta;
+
+17.
+MariaDB [baza_danych]> SELECT m.nazwa, o.imie, o.nazwisko
+    -> FROM miasta m, osoby o
+    -> WHERE o.id_miasta = m.id_miasta
+    -> UNION ALL
+    -> SELECT m.nazwa, f.nazwa, f.nazwa_skr
+    -> FROM miasta m, firmy f
+    -> WHERE m.id_miasta = f.id_miasta;

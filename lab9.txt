@@ -1,0 +1,91 @@
+1.
+MariaDB [magazyn]> UPDATE klienci
+    -> SET imie = "Daniel", nazwisko = "Ceranka"
+    -> WHERE id_klienta = 1;
+
+2.
+MariaDB [magazyn]> SELECT m.nazwa AS miasto, COUNT(k.id_klienta) AS liczba_klientow
+    -> FROM klienci k JOIN miasta m
+    -> ON k.id_miasta = m.id_miasta
+    -> GROUP BY m.nazwa;
+
+3.
+MariaDB [magazyn]> SELECT m.nazwa AS miasto, k.imie, k.nazwisko
+    -> FROM miasta m
+    -> LEFT JOIN klienci k ON m.id_miasta = k.id_miasta;
+
+4.
+MariaDB [magazyn]> SELECT m.nazwa AS miasto, d.nazwa
+    -> FROM miasta m
+    -> LEFT JOIN dostawcy d ON m.id_miasta = d.id_miasta;
+5.
+MariaDB [magazyn]> SELECT p.nazwa_produktu, SUM(z.liczba_sztuk) AS suma
+    -> FROM produkty p JOIN zamowienia z
+    -> ON p.id_produktu = z.id_produktu
+    -> GROUP BY p.id_produktu;
+6.
+MariaDB [magazyn]> SELECT SUM(p.cena * z.liczba_sztuk) AS wartosc_sprzedazy
+    -> FROM zamowienia z
+    -> JOIN produkty p ON z.id_produktu = p.id_produktu
+    -> WHERE z.data_zamowienia >= '2024-04-01' AND z.data_zamowienia <= '2024-06-30';
+7.
+MariaDB [magazyn]> SELECT k.imie, k.nazwisko, SUM(p.liczba_sztuk * p.cena) AS suma
+    -> FROM zamowienia z
+    -> JOIN produkty p ON z.id_produktu = p.id_produktu
+    -> JOIN klienci k ON z.id_klienta = k.id_klienta
+    -> GROUP BY k.id_klienta;
+8.
+MariaDB [magazyn]> SELECT p.nazwa_produktu, SUM(p.cena * z.liczba_sztuk) AS wartosc_sprzedazy
+    -> FROM zamowienia z
+    -> JOIN produkty p ON z.id_produktu = p.id_produktu
+    -> GROUP BY p.id_produktu, p.nazwa_produktu;
+9.
+MariaDB [magazyn]> SELECT pr.nazwa AS producent, SUM(p.cena * z.liczba_sztuk) AS wartosc_sprzedazy
+    -> FROM zamowienia z
+    -> JOIN produkty p ON z.id_produktu = p.id_produktu
+    -> JOIN producenci pr ON p.id_producenta = pr.id_producenta
+    -> GROUP BY pr.id_producenta, producent;
+10.
+MariaDB [magazyn]> SELECT k.imie, k.nazwisko, SUM(z.liczba_sztuk) AS suma_sztuk
+    -> FROM zamowienia z
+    -> JOIN klienci k ON z.id_klienta = k.id_klienta
+    -> GROUP BY k.id_klienta
+    -> HAVING SUM(z.liczba_sztuk) > 5000;
+11.
+MariaDB [magazyn]> SELECT k.imie, k.nazwisko, SUM(z.liczba_sztuk*) AS suma
+    -> FROM zamowienia z
+    -> JOIN klienci k ON z.id_klienta = k.id_klienta
+    -> GROUP BY k.id_klienta
+    -> ORDER BY suma DESC
+    -> LIMIT 1;
+12.
+MariaDB [magazyn]> SELECT k.imie, k.nazwisko, SUM(z.liczba_sztuk*p.cena) AS suma
+    -> FROM zamowienia z
+    -> JOIN produkty p ON z.id_produktu = p.id_produktu
+    -> JOIN klienci k ON z.id_klienta = k.id_klienta
+    -> GROUP BY k.id_klienta
+    -> ORDER BY suma DESC
+    -> LIMIT 1;
+13.
+MariaDB [magazyn]> SELECT p.id_producenta, p.nazwa AS producent, SUM(z.liczba_sztuk) AS suma
+    -> FROM zamowienia z
+    -> JOIN produkty pr ON z.id_produktu = pr.id_produktu
+    -> JOIN producenci p ON pr.id_producenta = p.id_producenta
+    -> GROUP BY p.id_producenta, producent
+    -> ORDER BY suma DESC
+    -> LIMIT 1;
+14.
+MariaDB [magazyn]> SELECT p.id_producenta, p.nazwa AS producent, SUM(z.liczba_sztuk*pr.cena) AS suma
+    -> FROM zamowienia z
+    -> JOIN produkty pr ON z.id_produktu = pr.id_produktu
+    -> JOIN producenci p ON pr.id_producenta = p.id_producenta
+    -> GROUP BY p.id_producenta, producent
+    -> ORDER BY suma DESC
+    -> LIMIT 1;
+15.
+MariaDB [magazyn]> SELECT nazwa AS nazwa
+    -> FROM producenci
+    -> UNION
+    -> SELECT CONCAT(imie, ' ', nazwisko) AS nazwa
+    -> FROM klienci;
+

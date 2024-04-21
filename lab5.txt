@@ -1,0 +1,390 @@
+1. Wyświetl zawartość tabeli wojewodztwa
+
+MariaDB [baza_danych]> select * FROM wojewodztwa;
++-------+---------------------+
+| kod_w | wojewodztwo         |
++-------+---------------------+
+| dol   | dolno?l?skie        |
+| kuj   | kujawsko-pomorskie  |
+| lod   | ?ódzkie             |
+| lub   | lubelskie           |
+| lue   | lubuskie            |
+| mal   | ma?opolskie         |
+| maz   | mazowieckie         |
+| opo   | opolskie            |
+| pod   | podkarpackie        |
+| pol   | podlaskie           |
+| pom   | pomorskie           |
+| sla   | ?l?skie             |
+| swi   | ?wi?tokrzyskie      |
+| war   | warmi?sko-mazurskie |
+| wie   | wielkopolskie       |
+| zac   | zachodniopomorskie  |
++-------+---------------------+
+16 rows in set (0.00 sec)
+
+2. Usuń wojewodztwo opolskie
+
+
+MariaDB [baza_danych]> DELETE FROM wojewodztwa WHERE wojewodztwo = 'opolskie';
+Query OK, 1 row affected (0.01 sec)
+
+3. Pokaż wojewodztwo mazowieckie
+
+MariaDB [baza_danych]> SELECT * FROM wojewodztwa WHERE wojewodztwo = 'mazowieckie';
++-------+-------------+
+| kod_w | wojewodztwo |
++-------+-------------+
+| maz   | mazowieckie |
++-------+-------------+
+
+4. Pokaż wszystkie województwa na literę M (operator %)
+
+MariaDB [baza_danych]> SELECT * FROM wojewodztwa WHERE wojewodztwo LIKE 'M%';
++-------+-------------+
+| kod_w | wojewodztwo |
++-------+-------------+
+| mal   | ma?opolskie |
+| maz   | mazowieckie |
++-------+-------------+
+2 rows in set (0.00 sec)
+
+
+5. Pokaż wszystkie województwa zawierające myślnik w nazwie
+
+MariaDB [baza_danych]> SELECT * FROM wojewodztwa WHERE wojewodztwo LIKE '%-%';
++-------+---------------------+
+| kod_w | wojewodztwo         |
++-------+---------------------+
+| kuj   | kujawsko-pomorskie  |
+| war   | warmi?sko-mazurskie |
++-------+---------------------+
+2 rows in set (0.00 sec)
+
+6. Pokaż wszystkie województwa z nazwą kończąca się na „ckie”
+
+MariaDB [baza_danych]> SELECT * FROM wojewodztwa WHERE wojewodztwo LIKE '%ckie';
++-------+--------------+
+| kod_w | wojewodztwo  |
++-------+--------------+
+| maz   | mazowieckie  |
+| pod   | podkarpackie |
++-------+--------------+
+2 rows in set (0.00 sec)
+
+7. Pokaż wszystkie województwa z nazwą na 7 liter (operator _)
+
+MariaDB [baza_danych]> SELECT * FROM wojewodztwa WHERE wojewodztwo LIKE '_______';
++-------+-------------+
+| kod_w | wojewodztwo |
++-------+-------------+
+| lod   | ?ódzkie     |
+| sla   | ?l?skie     |
++-------+-------------+
+2 rows in set (0.00 sec)
+
+8. Dodaj na nowo wiersz z województwem opolskim.
+
+MariaDB [baza_danych]> INSERT INTO wojewodztwa (kod_w, wojewodztwo) VALUES ('opo', 'opolskie');
+Query OK, 1 row affected (0.00 sec)
+
+
+9. Wyświetl wszystkie wojewodztwa porządkując je alfabetycznie
+
+MariaDB [baza_danych]> SELECT * FROM wojewodztwa ORDER BY wojewodztwo;
++-------+---------------------+
+| kod_w | wojewodztwo         |
++-------+---------------------+
+| sla   | ?l?skie             |
+| lod   | ?ódzkie             |
+| swi   | ?wi?tokrzyskie      |
+| dol   | dolno?l?skie        |
+| kuj   | kujawsko-pomorskie  |
+| lub   | lubelskie           |
+| lue   | lubuskie            |
+| mal   | ma?opolskie         |
+| maz   | mazowieckie         |
+| opo   | opolskie            |
+| pod   | podkarpackie        |
+| pol   | podlaskie           |
+| pom   | pomorskie           |
+| war   | warmi?sko-mazurskie |
+| wie   | wielkopolskie       |
+| zac   | zachodniopomorskie  |
++-------+---------------------+
+16 rows in set (0.00 sec)
+
+
+10. Wyświetl zawartość tabeli miasta
+
+MariaDB [baza_danych]> SELECT * FROM miasta;
++-----------+-------+----------+
+| id_miasta | kod_w | nazwa    |
++-----------+-------+----------+
+|         1 | maz   | Weso?a   |
+|         2 | maz   | Warszawa |
+|         3 | pom   | Gda?sk   |
+|         4 | pom   | Sopot    |
++-----------+-------+----------+
+4 rows in set (0.00 sec)
+
+
+11. Do tabeli miast wprowadź jeszcze pięć dowolnych (poprawnych) rekordów
+
+MariaDB [baza_danych]> INSERT INTO miasta (kod_w, nazwa) VALUES
+    -> ( 'mal', 'Kraków' ),
+    -> ( 'mal', 'Zakopane' ),
+    -> ( 'lod', 'Piotrków Trybunalski' ),
+    -> ( 'lub', 'Lublin' ),
+    -> ( 'swi', 'Kielce' );
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+12. Ponownie wyświetl zawartość tabeli miasta alfabetycznie
+
+MariaDB [baza_danych]> SELECT * FROM miasta ORDER BY nazwa;
++-----------+-------+----------------------+
+| id_miasta | kod_w | nazwa                |
++-----------+-------+----------------------+
+|         3 | pom   | Gda?sk               |
+|         9 | swi   | Kielce               |
+|         5 | mal   | Kraków               |
+|         8 | lub   | Lublin               |
+|         7 | lod   | Piotrków Trybunalski |
+|         4 | pom   | Sopot                |
+|         2 | maz   | Warszawa             |
+|         1 | maz   | Weso?a               |
+|         6 | mal   | Zakopane             |
++-----------+-------+----------------------+
+
+13. Wyświetl z jakich wojewodztw są wszystkie miasta
+
+MariaDB [baza_danych]> SELECT DISTINCT w.wojewodztwo
+    -> FROM wojewodztwa w
+    -> WHERE w.kod_w IN (SELECT DISTINCT m.kod_w FROM miasta m);
++----------------+
+| wojewodztwo    |
++----------------+
+| ?ódzkie        |
+| lubelskie      |
+| ma?opolskie    |
+| mazowieckie    |
+| pomorskie      |
+| ?wi?tokrzyskie |
++----------------+
+6 rows in set (0.01 sec)
+
+14. Wyświetl z jakich wojewodztw są wszystkie miasta, sortując je alfabetycznie wg nazw województw w porządku rosnącym
+
+MariaDB [baza_danych]> SELECT m.nazwa AS miasto, w.wojewodztwo
+    -> FROM miasta m
+    -> INNER JOIN wojewodztwa w ON m.kod_w = w.kod_w
+    -> ORDER BY w.wojewodztwo ASC;
++----------------------+----------------+
+| miasto               | wojewodztwo    |
++----------------------+----------------+
+| Piotrków Trybunalski | ?ódzkie        |
+| Kielce               | ?wi?tokrzyskie |
+| Lublin               | lubelskie      |
+| Zakopane             | ma?opolskie    |
+| Kraków               | ma?opolskie    |
+| Warszawa             | mazowieckie    |
+| Weso?a               | mazowieckie    |
+| Gda?sk               | pomorskie      |
+| Sopot                | pomorskie      |
++----------------------+----------------+
+9 rows in set (0.00 sec)
+
+15. Wyświetl z jakich wojewodztw są wszystkie miasta, sortując je alfabetycznie wg nazw miast w porządku malejącym
+
+MariaDB [baza_danych]> SELECT m.nazwa AS miasto, w.wojewodztwo
+    -> FROM miasta m
+    -> INNER JOIN wojewodztwa w ON m.kod_w = w.kod_w
+    -> ORDER BY m.nazwa DESC;
++----------------------+----------------+
+| miasto               | wojewodztwo    |
++----------------------+----------------+
+| Zakopane             | ma?opolskie    |
+| Weso?a               | mazowieckie    |
+| Warszawa             | mazowieckie    |
+| Sopot                | pomorskie      |
+| Piotrków Trybunalski | ?ódzkie        |
+| Lublin               | lubelskie      |
+| Kraków               | ma?opolskie    |
+| Kielce               | ?wi?tokrzyskie |
+| Gda?sk               | pomorskie      |
++----------------------+----------------+
+9 rows in set (0.00 sec)
+
+
+16. Do tabeli osoby dodaj jeszcze jedną kolumnę – imie2.
+
+MariaDB [baza_danych]> ALTER TABLE osoby ADD COLUMN imie2 VARCHAR(20);
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+17. Zmień dane w tabeli osoby tak, aby id_o 3 i 5 zawierały dane: Jan Włodzimierz Szczęsny i Ewa Jadwiga Wyrwa
+
+MariaDB [baza_danych]> UPDATE osoby
+    -> SET imie = 'Jan', imie2 = 'Włodzimierz', nazwisko = 'Szczęsny'
+    -> WHERE id_osoby = 3;
+Query OK, 1 row affected, 2 warnings (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 2
+
+MariaDB [baza_danych]> UPDATE osoby
+    -> SET imie = 'Ewa', imie2 = 'Jadwiga', nazwisko = 'Wyrwa'
+    -> WHERE id_osoby = 5;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+18. Wyświetl tylko te rekordy z tabeli osoby, które nie mają pustego pola imie2
+
+MariaDB [baza_danych]> SELECT * FROM osoby WHERE imie2 IS NOT NULL;
++----------+-----------+------+----------+-------------+
+| id_osoby | id_miasta | imie | nazwisko | imie2       |
++----------+-----------+------+----------+-------------+
+|        3 |         3 | Jan  | Szcz?sny | W?odzimierz |
+|        5 |         2 | Ewa  | Wyrwa    | Jadwiga     |
++----------+-----------+------+----------+-------------+
+2 rows in set (0.00 sec)
+
+19. Dodaj 5 nowych (poprawnych) rekordów do tabeli osoby
+
+MariaDB [baza_danych]> INSERT INTO osoby (id_miasta, imie, imie2, nazwisko) VALUES
+    -> (1, 'Adam', 'Jan', 'Nowak'),
+    -> (2, 'Maria', 'Magdalena', 'Kowalczyk'),
+    -> (3, 'Paweł', 'Karol', 'Lis'),
+    -> (4, 'Aleksandra', 'Barbara', 'Zielińska'),
+    -> (2, 'Marek', 'Kamil', 'Woźniak');
+Query OK, 5 rows affected, 3 warnings (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 3
+
+20. Wyświetl tylko te rekordy z tabeli osoby, które mają id_o równe 3, 5 i 7
+
+MariaDB [baza_danych]> SELECT * FROM osoby WHERE id_osoby IN (3, 5, 7);
++----------+-----------+-------+-----------+-------------+
+| id_osoby | id_miasta | imie  | nazwisko  | imie2       |
++----------+-----------+-------+-----------+-------------+
+|        3 |         3 | Jan   | Szcz?sny  | W?odzimierz |
+|        5 |         2 | Ewa   | Wyrwa     | Jadwiga     |
+|        7 |         2 | Maria | Kowalczyk | Magdalena   |
++----------+-----------+-------+-----------+-------------+
+3 rows in set (0.00 sec)
+
+21. Wyświetl pełne dane personalne z tabeli osoby, ale tylko kobiet (końcówka a)
+
+MariaDB [baza_danych]> SELECT * FROM osoby WHERE imie LIKE '%a';
++----------+-----------+------------+-----------+-----------+
+| id_osoby | id_miasta | imie       | nazwisko  | imie2     |
++----------+-----------+------------+-----------+-----------+
+|        5 |         2 | Ewa        | Wyrwa     | Jadwiga   |
+|        7 |         2 | Maria      | Kowalczyk | Magdalena |
+|        9 |         4 | Aleksandra | Zieli?ska | Barbara   |
++----------+-----------+------------+-----------+-----------+
+
+22. Wyświetl imiona i nazwiska osób, które w imieniu lub nazwisku mają literę k
+
+MariaDB [baza_danych]> SELECT imie, nazwisko
+    -> FROM osoby
+    -> WHERE imie LIKE '%k%' OR nazwisko LIKE '%k%';
++------------+-------------+
+| imie       | nazwisko    |
++------------+-------------+
+| Maciej     | Stodolski   |
+| Jacek      | Korytkowski |
+| Krol       | Neptun      |
+| Adam       | Nowak       |
+| Maria      | Kowalczyk   |
+| Aleksandra | Zieli?ska   |
+| Marek      | Wo?niak     |
++------------+-------------+
+7 rows in set (0.00 sec)
+
+23. Wyświetl imiona i nazwiska osób, które w imieniu i nazwisku mają literę a
+
+MariaDB [baza_danych]> SELECT imie, nazwisko
+    -> FROM osoby
+    -> WHERE imie LIKE '%a%' AND nazwisko LIKE '%a%';
++------------+-----------+
+| imie       | nazwisko  |
++------------+-----------+
+| Ewa        | Wyrwa     |
+| Adam       | Nowak     |
+| Maria      | Kowalczyk |
+| Aleksandra | Zieli?ska |
+| Marek      | Wo?niak   |
++------------+-----------+
+5 rows in set (0.00 sec)
+
+24. Z tabel osoby, miasta i wojewodztwa wyswietl ich całe zawartości
+
+MariaDB [baza_danych]> SELECT *
+    -> FROM osoby, miasta, wojewodztwa
+    -> WHERE osoby.id_miasta = miasta.id_miasta
+    -> AND miasta.kod_w = wojewodztwa.kod_w;
++----------+-----------+------------+-------------+-------------+-----------+-------+----------+-------+-------------+
+| id_osoby | id_miasta | imie       | nazwisko    | imie2       | id_miasta | kod_w | nazwa    | kod_w | wojewodztwo |
++----------+-----------+------------+-------------+-------------+-----------+-------+----------+-------+-------------+
+|        1 |         1 | Maciej     | Stodolski   | NULL        |         1 | maz   | Weso?a   | maz   | mazowieckie |
+|        2 |         2 | Jacek      | Korytkowski | NULL        |         2 | maz   | Warszawa | maz   | mazowieckie |
+|        3 |         3 | Jan        | Szcz?sny    | W?odzimierz |         3 | pom   | Gda?sk   | pom   | pomorskie   |
+|        4 |         4 | Krol       | Neptun      | NULL        |         4 | pom   | Sopot    | pom   | pomorskie   |
+|        5 |         2 | Ewa        | Wyrwa       | Jadwiga     |         2 | maz   | Warszawa | maz   | mazowieckie |
+|        6 |         1 | Adam       | Nowak       | Jan         |         1 | maz   | Weso?a   | maz   | mazowieckie |
+|        7 |         2 | Maria      | Kowalczyk   | Magdalena   |         2 | maz   | Warszawa | maz   | mazowieckie |
+|        8 |         3 | Pawe?      | Lis         | Karol       |         3 | pom   | Gda?sk   | pom   | pomorskie   |
+|        9 |         4 | Aleksandra | Zieli?ska   | Barbara     |         4 | pom   | Sopot    | pom   | pomorskie   |
+|       10 |         2 | Marek      | Wo?niak     | Kamil       |         2 | maz   | Warszawa | maz   | mazowieckie |
++----------+-----------+------------+-------------+-------------+-----------+-------+----------+-------+-------------+
+10 rows in set (0.00 sec)
+
+25. Z tabel osoby, miasta i wojewodztwa wyświetl wszystkie pola, które nie są kluczami
+
+MariaDB [baza_danych]> SELECT
+    ->      o.imie, o.imie2, o.nazwisko,
+    ->      m.nazwa,
+    ->      w.wojewodztwo
+    -> FROM    osoby o
+    -> JOIN    miasta m ON o.id_miasta = m.id_miasta
+    -> JOIN    wojewodztwa w ON m.kod_w = w.kod_w;
++------------+-------------+-------------+----------+-------------+
+| imie       | imie2       | nazwisko    | nazwa    | wojewodztwo |
++------------+-------------+-------------+----------+-------------+
+| Maciej     | NULL        | Stodolski   | Weso?a   | mazowieckie |
+| Jacek      | NULL        | Korytkowski | Warszawa | mazowieckie |
+| Jan        | W?odzimierz | Szcz?sny    | Gda?sk   | pomorskie   |
+| Krol       | NULL        | Neptun      | Sopot    | pomorskie   |
+| Ewa        | Jadwiga     | Wyrwa       | Warszawa | mazowieckie |
+| Adam       | Jan         | Nowak       | Weso?a   | mazowieckie |
+| Maria      | Magdalena   | Kowalczyk   | Warszawa | mazowieckie |
+| Pawe?      | Karol       | Lis         | Gda?sk   | pomorskie   |
+| Aleksandra | Barbara     | Zieli?ska   | Sopot    | pomorskie   |
+| Marek      | Kamil       | Wo?niak     | Warszawa | mazowieckie |
++------------+-------------+-------------+----------+-------------+
+10 rows in set (0.00 sec)
+
+
+26.Wyświetl imiona, nazwiska, daty zatrudnienia i stanowiska osób zatrudnionych pomiędzy 1 stycznia 2000 roku a 31 grudnia 2001 roku
+
+MariaDB [baza_danych]> SELECT
+    ->      o.imie,
+    ->      o.nazwisko,
+    ->      e.od AS data_zatrudnienia,
+    ->      e.stanowisko
+    -> FROM     osoby o
+    -> JOIN     etaty e ON o.id_osoby = e.id_osoby
+    -> WHERE     e.od BETWEEN '2000-01-01' AND '2001-12-31';
++--------+-------------+---------------------+------------+
+| imie   | nazwisko    | data_zatrudnienia   | stanowisko |
++--------+-------------+---------------------+------------+
+| Maciej | Stodolski   | 2000-01-02 00:00:00 | Adiunkt    |
+| Maciej | Stodolski   | 2000-01-01 00:00:00 | Konsultant |
+| Jacek  | Korytkowski | 2001-11-10 00:00:00 | Adiunkt    |
+| Ewa    | Wyrwa       | 2000-01-01 00:00:00 | Dyrektor   |
++--------+-------------+---------------------+------------+
+4 rows in set (0.00 sec)
+
+
+
