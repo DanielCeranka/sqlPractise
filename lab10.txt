@@ -1,0 +1,40 @@
+1.
+MariaDB [magazyn]> CREATE USER boss IDENTIFIED BY 'szefu123'
+    -> ;
+
+2.
+MariaDB [magazyn]> GRANT ALL PRIVILEGES ON *.* TO 'boss'@'localhost' IDENTIFIED BY 'szefu123';
+MariaDB [magazyn]> CREATE TABLE tablica_szefu(
+    -> szef varchar(30)
+    -> );
+
+3.
+MariaDB [(none)]> CREATE USER janusz@localhost IDENTIFIED BY 'januszek2000';
+MariaDB [(none)]> USE magazyn;
+ERROR 1044 (42000): Access denied for user 'janusz'@'localhost' to database 'magazyn'
+
+4.
+MariaDB [(none)]> GRANT SELECT, INSERT, UPDATE ON magazyn.miasta TO 'janusz'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [(none)]> GRANT SELECT, INSERT, UPDATE ON magazyn.zamowienia TO 'janusz'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+MariaDB [magazyn]> SELECT * FROM miasta, zamowienia;
+
+5.
+MariaDB [magazyn]> REVOKE UPDATE ON magazyn.miasta FROM 'janusz'@'localhost';
+
+6.
+MariaDB [magazyn]> REVOKE ALL PRIVILEGES ON *.* FROM 'boss'@'localhost';
+
+C:\xampp\mysql\bin>mysql -u boss -p
+Enter password: ********
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+
+MariaDB [(none)]> USE magazyn;
+ERROR 1044 (42000): Access denied for user 'boss'@'localhost' to database 'magazyn'
+
+7.
+MariaDB [MAGAZYN]> DROP USER boss;
+Query OK, 0 rows affected (0.00 sec)
