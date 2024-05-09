@@ -1,0 +1,132 @@
+1.
+
+DELIMITER //
+CREATE PROCEDURE ile_kontrahentow()
+BEGIN
+    DECLARE liczba INT;
+    SELECT COUNT(*) INTO liczba FROM kontrahenci;
+    SELECT liczba;
+END//
+DELIMITER ;
+
+CALL ile_kontrahentow();
+
+2.
+
+DELIMITER //
+CREATE PROCEDURE najrzadziej_kupowana()
+	BEGIN
+    SELECT a.produkt, SUM(p.ilosc) as sztuk
+    FROM asortyment a
+    JOIN pozycje p ON p.id_a = a.id_a
+    GROUP BY a.produkt
+    ORDER BY sztuk
+    LIMIT 1;
+   END //
+   DELIMITER;
+
+CALL najrzadziej_kupowana()
+
+
+1.
+
+DELIMITER //
+CREATE PROCEDURE ilosc_asortymentu()
+	BEGIN
+    SELECT COUNT(*) AS ilosc_asortymentu FROM pozycje;
+   END //
+DELIMITER;
+
+CALL ilosc_asortymentu()
+
+2.
+
+DELIMITER //
+CREATE PROCEDURE wypisz_vat()
+	BEGIN
+    SELECT DISTINCT vat FROM asortyment;
+   END //
+DELIMITER ;
+
+CALL wypisz_vat();
+
+3.
+
+DELIMITER //
+CREATE PROCEDURE najwyzsza_pozycja()
+BEGIN
+    SELECT a.produkt
+    FROM asortyment a
+    JOIN pozycje p ON a.id_a = p.id_a
+    JOIN faktury f ON p.id_f = f.id_f
+    ORDER BY p.ilosc * a.cena DESC
+    LIMIT 1;
+END//
+DELIMITER ;
+
+CALL najwyzsza_pozycja();
+
+4.
+
+DELIMITER //
+CREATE PROCEDURE najwyzsza_faktura()
+BEGIN
+    SELECT f.numer
+    FROM asortyment a
+    JOIN pozycje p ON a.id_a = p.id_a
+    JOIN faktury f ON p.id_f = f.id_f
+    GROUP BY f.numer
+    ORDER BY SUM(p.ilosc * a.cena) DESC
+    LIMIT 1;
+END//
+DELIMITER ;
+
+CALL najwyzsza_faktura();
+
+5.
+
+DELIMITER //
+CREATE PROCEDURE najwiecej_pieniedzy_wydal()
+BEGIN
+    SELECT k.nazwa, k.nazwa_skr, CONCAT(k.ulica, ' ', k.nr, COALESCE(CONCAT('/', k.nr2), ''), ', ', m.kod_pocztowy, ' ', miasto, ', ', w.wojewodztwo) AS adres
+    FROM kontrahenci k
+    JOIN miasta m ON m.kod_pocztowy = k.kod_pocztowy
+    JOIN wojewodztwa w ON w.kod_w = m.kod_w
+    JOIN pozycje p ON a.id_a = p.id_a
+    JOIN faktury f ON p.id_f = f.id_f
+    GROUP BY k.nazwa
+    ORDER BY SUM(p.ilosc * a.cena) DESC
+    LIMIT 1;
+END//
+DELIMITER ;
+
+CALL najwiecej_pieniedzy_wydal();
+
+6.
+DELIMITER //
+CREATE PROCEDURE tworz_temp_miastafaktur()
+BEGIN
+    CREATE TEMPORARY TABLE temp_manufaktu AS
+    SELECT f.id_f, f.data_sprzedazy, k.kod_pocztowy, m.miasto
+    FROM faktury f
+	JOIN kontrahenci k ON k.id_k = f.id_k
+	JOIN miasta m ON m.kod_pocztowy = k.kod_pocztowy;
+END//
+DELIMITER ;
+
+CALL tworz_temp_miastafaktur();
+
+7.
+DELIMITER //
+CREATE PROCEDURE usun_temp_manufaktu()
+BEGIN
+    DROP TEMPORARY TABLE IF EXISTS temp_miastafaktur;
+END//
+DELIMITER ;
+
+CALL usun_temp_miastafaktur();
+
+
+
+
+
